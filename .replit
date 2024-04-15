@@ -10,5 +10,10 @@ channel = "stable-23_05"
 language = "python3"
 
 [deployment]
-run = ["python3", "main.py"]
+# run = ["python3", "main.py"]
+run = "uvicorn main:app --reload --host=0.0.0.0 --port=8000"
 deploymentTarget = "cloudrun"
+
+[[ports]]
+localPort = 8000
+externalPort = 80
