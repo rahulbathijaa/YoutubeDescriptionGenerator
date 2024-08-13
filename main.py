@@ -11,17 +11,15 @@ app = FastAPI()
 origins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-   "https://your-frontend-repl-name.username.repl.co",
 ]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST"],
+    allow_headers=["*"], 
 )
-
 api_key = os.getenv('OPENAI_API_KEY')
 client = OpenAI(api_key=api_key)
 
@@ -53,9 +51,15 @@ async def transcribe_audio(audio: UploadFile = File(...)):
         return transcription
 
 @app.post("/generate-description/")
-async def generate_description(transcription_text: str = Form(...), channel_name: str = Form(...),
-                               video_titles: list = Form(...), expected_video_title: str = Form(...), 
-                               ctas: str = Form(...), social_links: str = Form(...), regenerate: bool = Form(False)):
+async def generate_description(
+    transcription_text: str = Form(...), 
+    channel_name: str = Form(...),
+    video_titles: list = Form(...), 
+    expected_video_title: str = Form(...), 
+    ctas: str = Form(...), 
+    social_links: str = Form(...), 
+    regenerate: bool = Form(False)
+):
     description_file_path = "output.txt"
     if not regenerate and Path(description_file_path).is_file():
         print("Description file already exists. Reading from file...")
